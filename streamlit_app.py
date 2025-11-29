@@ -5,7 +5,7 @@ import numpy as np
 import os
 
 st.set_page_config(
-    page_title="Diabetes Prediction",
+    page_title="Diabetes prediction",
     layout="centered",
     initial_sidebar_state="auto"
 )
