@@ -32,7 +32,7 @@ def load_model():
 lrn = load_model()
 
 
-st.title("🩺 Diabetes Prediction Application")
+st.title("🩺 Diabetes prediction")
 
 st.write("Enter the following parameters to assess the risk of developing diabetes:")
 
@@ -53,22 +53,22 @@ if lrn is not None:
     
     with col1:
         pregnancies = st.number_input(
-            '1. Number of Pregnancies',
+            '1. Number of pregnancies',
             min_value=0, max_value=20, value=1, step=1,
             help="Number of pregnancies"
         )
         glucose = st.number_input(
-            '2. Glucose Level (mg/dL)',
+            '2. Glucose level (mg/dL)',
             min_value=0.0, max_value=200.0, value=120.0, step=0.1,
             help="Plasma glucose concentration"
         )
         blood_pressure = st.number_input(
-            '3. Blood Pressure (mm Hg)',
+            '3. Blood pressure (mm Hg)',
             min_value=0.0, max_value=150.0, value=70.0, step=0.1,
             help="Diastolic blood pressure"
         )
         skin_thickness = st.number_input(
-            '4. Skin Thickness (mm)',
+            '4. Skin thickness (mm)',
             min_value=0.0, max_value=100.0, value=25.0, step=0.1,
             help="Triceps skin fold thickness"
         )
@@ -80,12 +80,12 @@ if lrn is not None:
             help="2-hour serum insulin"
         )
         bmi = st.number_input(
-            '6. Body Mass Index (BMI) (kg/m²)',
+            '6. Body mass index (BMI) (kg/m²)',
             min_value=0.0, max_value=70.0, value=25.0, step=0.1,
             help="Body Mass Index"
         )
         dpf = st.number_input(
-            '7. Diabetes Pedigree Function',
+            '7. Diabetes pedigree function',
             min_value=0.0, max_value=2.5, value=0.4, step=0.001, format="%.3f",
             help="Genetic risk assessment"
         )
@@ -97,7 +97,7 @@ if lrn is not None:
         
     st.markdown(" ")
     
-    predict_button = st.button("🔍 Get Prediction", type="primary", use_container_width=True)
+    predict_button = st.button("🔍 Get prediction", type="primary", use_container_width=True)
 
     if predict_button:
         input_data = [
