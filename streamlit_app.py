@@ -110,7 +110,7 @@ if lrn is not None:
         # Perform prediction
         prediction = lrn.predict(input_df)[0]
         
-        st.header("Analysis Result:")
+        st.header("Analysis result:")
         
         if prediction == 1:
             st.error("🔴 **POSITIVE RESULT**")
