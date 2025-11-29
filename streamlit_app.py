@@ -2,10 +2,10 @@ import streamlit as st
 import joblib
 import pandas as pd
 import numpy as np
-import os 
+import os
 
 st.set_page_config(
-    page_title="Предсказание диабета", 
+    page_title="Diabetes Prediction",
     layout="centered",
     initial_sidebar_state="auto"
 )
@@ -17,34 +17,35 @@ MODEL_FILENAME = 'diabetes_model.pkl'
 @st.cache_resource
 def load_model():
     if not os.path.exists(MODEL_FILENAME):
-        st.error(f"❌ Ошибка: Файл модели '{MODEL_FILENAME}' не найден.")
-        st.info("Пожалуйста, убедитесь, что вы сохранили модель в Jupiter Notebook командой joblib.dump(lrm, 'diabetes_model.pkl') и что файл находится в той же папке.")
+        st.error(f"❌ Error: Model file '{MODEL_FILENAME}' not found.")
+        st.info("Please ensure you have saved the model in a Jupyter Notebook using joblib.dump(lrm, 'diabetes_model.pkl') and that the file is in the same folder.")
         return None
     
     try:
         model = joblib.load(MODEL_FILENAME)
         return model
     except Exception as e:
-        st.error(f"❌ Ошибка при загрузке модели: {e}")
+        st.error(f"❌ Error loading model: {e}")
         return None
 
+# Load the model (variable name lrn is preserved as per request)
 lrn = load_model()
 
 
-st.title("🩺 Приложение для предсказания диабета")
+st.title("🩺 Diabetes Prediction Application")
 
-st.write("Введите следующие параметры для оценки риска развития диабета:")
+st.write("Enter the following parameters to assess the risk of developing diabetes:")
 
 if lrn is not None:
     
     FEATURE_NAMES = [
-        'Pregnancies', 
-        'Glucose', 
-        'BloodPressure', 
-        'SkinThickness', 
-        'Insulin', 
-        'BMI', 
-        'DiabetesPedigreeFunction', 
+        'Pregnancies',
+        'Glucose',
+        'BloodPressure',
+        'SkinThickness',
+        'Insulin',
+        'BMI',
+        'DiabetesPedigreeFunction',
         'Age'
     ]
 
@@ -52,76 +53,78 @@ if lrn is not None:
     
     with col1:
         pregnancies = st.number_input(
-            '1. Количество беременностей', 
+            '1. Number of Pregnancies',
             min_value=0, max_value=20, value=1, step=1,
-            help="Количество беременностей"
+            help="Number of pregnancies"
         )
         glucose = st.number_input(
-            '2. Уровень глюкозы (мг/дл)', 
+            '2. Glucose Level (mg/dL)',
             min_value=0.0, max_value=200.0, value=120.0, step=0.1,
-            help="Концентрация глюкозы в плазме"
+            help="Plasma glucose concentration"
         )
         blood_pressure = st.number_input(
-            '3. Кровяное давление (мм рт. ст.)', 
+            '3. Blood Pressure (mm Hg)',
             min_value=0.0, max_value=150.0, value=70.0, step=0.1,
-            help="Диастолическое артериальное давление"
+            help="Diastolic blood pressure"
         )
         skin_thickness = st.number_input(
-            '4. Толщина кожной складки (мм)', 
+            '4. Skin Thickness (mm)',
             min_value=0.0, max_value=100.0, value=25.0, step=0.1,
-            help="Толщина кожной складки на трицепсе"
+            help="Triceps skin fold thickness"
         )
         
     with col2:
         insulin = st.number_input(
-            '5. Уровень инсулина (мкМЕ/мл)', 
+            '5. Insulin Level (µU/ml)',
             min_value=0.0, max_value=900.0, value=0.0, step=0.1,
-            help="2-часовой сывороточный инсулин"
+            help="2-hour serum insulin"
         )
         bmi = st.number_input(
-            '6. Индекс массы тела (кг/м²)', 
+            '6. Body Mass Index (BMI) (kg/m²)',
             min_value=0.0, max_value=70.0, value=25.0, step=0.1,
-            help="Индекс массы тела"
+            help="Body Mass Index"
         )
         dpf = st.number_input(
-            '7. Функция родословной диабета', 
+            '7. Diabetes Pedigree Function',
             min_value=0.0, max_value=2.5, value=0.4, step=0.001, format="%.3f",
-            help="Оценка генетического риска"
+            help="Genetic risk assessment"
         )
         age = st.number_input(
-            '8. Возраст', 
+            '8. Age',
             min_value=0, max_value=120, value=30, step=1,
-            help="Возраст человека в годах"
+            help="Age of the person in years"
         )
         
-    st.markdown("  ")
+    st.markdown(" ")
     
-    predict_button = st.button("🔍 Получить предсказание", type="primary", use_container_width=True)
+    predict_button = st.button("🔍 Get Prediction", type="primary", use_container_width=True)
 
     if predict_button:
         input_data = [
-            pregnancies, glucose, blood_pressure, skin_thickness, 
+            pregnancies, glucose, blood_pressure, skin_thickness,
             insulin, bmi, dpf, age
         ]
         
         input_df = pd.DataFrame([input_data], columns=FEATURE_NAMES)
         
-        prediction = lrn.predict(input_df)[0] 
+        # Perform prediction
+        prediction = lrn.predict(input_df)[0]
         
-        st.header("Результат анализа:")
+        st.header("Analysis Result:")
         
         if prediction == 1:
-            st.error("🔴 **ПОЛОЖИТЕЛЬНЫЙ РЕЗУЛЬТАТ**")
-            st.markdown("Модель предсказывает **высокий риск** диабета. Рекомендуется консультация врача.")
+            st.error("🔴 **POSITIVE RESULT**")
+            st.markdown("The model predicts a **high risk** of diabetes. Medical consultation is recommended")
         else:
-            st.success("🟢 **ОТРИЦАТЕЛЬНЫЙ РЕЗУЛЬТАТ**")
-            st.markdown("Модель предсказывает **низкий риск** диабета. Продолжайте следить за здоровьем.")
+            st.success("🟢 **NEGATIVE RESULT**")
+            st.markdown("The model predicts a **low risk** of diabetes. Continue to monitor your health")
             
+        # Get probability for class 1 (diabetes)
         probability = lrn.predict_proba(input_df)[0]
-        st.caption(f"Вероятность диабета (класс 1): **{probability[1]*100:.2f}%**")
+        st.caption(f"Probability of Diabetes (Class 1): **{probability[1]*100:.2f}%**")
         
     st.markdown("---")
 
 
-st.sidebar.title("ВНИМАНИЕ!")
-st.sidebar.info("Этот сайт является демонстрацией модели машинного обучения и не является медицинским инструментом. Полученные результаты не заменяют консультацию специалиста и профессиональную диагностику.")
+st.sidebar.title("ATTENTION!")
+st.sidebar.info("This site is a demonstration of a machine learning model and is not a medical tool. The results obtained do not replace professional diagnosis or consultation with a specialist!")
